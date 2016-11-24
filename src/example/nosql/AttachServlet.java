@@ -45,7 +45,7 @@ public class AttachServlet extends HttpServlet {
 		JsonObject responseJson=null;
 		JsonElement je=null;
 		String trends=null;
-		String trendsRetrived[]=null;
+		String trendsRetrived[]=new String[5];
 		try{			
 			String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query=PHOTO%20SHADOW%20BOX%20TRAY&sort=customerRating&order=desc&numItems=5";
 			HttpClient client = HttpClientBuilder.create().build();
@@ -59,13 +59,15 @@ public class AttachServlet extends HttpServlet {
 			responseJson = parser.parse(result).getAsJsonObject();
 			JsonArray jsonArray=responseJson.getAsJsonArray("items");
 			
-			 trendsRetrived = new String[5];
 			for(int i=0;i<jsonArray.size();i++){				
-				je=responseJson.getAsJsonArray("items").get(i);			
+				je=jsonArray.get(i);			
 				JsonParser parser1 = new JsonParser();
 				responseJson = parser1.parse(je.toString()).getAsJsonObject();
 				trends=responseJson.get("categoryPath").getAsString();
 				trends=trends.substring(trends.lastIndexOf("/")+1);
+				
+				System.out.println("trends count:"+i+"::"+trends);
+				
 				trendsRetrived[i]=trends;
 			}
 			
