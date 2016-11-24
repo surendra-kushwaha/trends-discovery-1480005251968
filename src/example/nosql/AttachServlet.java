@@ -12,10 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+
 import com.cloudant.client.api.Database;
 import com.google.gson.JsonObject;
 
-@WebServlet("/attach")
+@WebServlet("/getTrends")
 @MultipartConfig()
 public class AttachServlet extends HttpServlet {
 
@@ -24,51 +29,28 @@ public class AttachServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		Part part = request.getPart("file");
-
-		String id = request.getParameter("id");
-		String name = request.getParameter("name");
-		String value = request.getParameter("value");
-		String fileName = request.getParameter("filename");
-
-		Database db = null;
-		try {
-			db = CloudantClientMgr.getDB();
-		} catch (Exception re) {
-			re.printStackTrace();
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			return;
-		}
-
-		ResourceServlet servlet = new ResourceServlet();
-
-		JsonObject resultObject = servlet.create(db, id, name, value, part, fileName);
-
-		System.out.println("Upload completed.");
-
-		response.getWriter().println(resultObject.toString());
+		
+		doGet(request,response);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String id = request.getParameter("id");
-		String key = request.getParameter("key");
-
-		response.setHeader("Content-Disposition", "inline; filename=\"" + key + "\"");
-
-		InputStream dbResponse = CloudantClientMgr.getDB().find(id + "/" + key);
-		OutputStream output = response.getOutputStream();
-
-		try {
-			int readBytes = 0;
-			byte[] buffer = new byte[readBufferSize];
-			while ((readBytes = dbResponse.read(buffer)) >= 0) {
-				output.write(buffer, 0, readBytes);
-			}
-		} finally {
-			dbResponse.close();
+		trendsFinder();
+		
+	}
+	
+	public void trendsFinder(){
+		try{			
+			String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query=PHOTO%20SHADOW%20BOX%20TRAY&sort=customerRating&order=desc&numItems=5";
+			HttpClient client = HttpClientBuilder.create().build();
+			HttpGet request = new HttpGet(url);
+			request.addHeader("User-Agent", "");
+			HttpResponse response = client.execute(request);
+			System.out.println("Response status"+response.getStatusLine().getStatusCode());
+			System.out.println("Response from wallmart api:##"+response.toString());
+		}catch(Exception e){System.out.println(e);
+			//logger.error(e);
 		}
-
 	}
 
 }
