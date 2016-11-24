@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -39,8 +40,10 @@ public class AttachServlet extends HttpServlet {
 		
 	}
 	
-	public JsonObject trendsFinder(){
+	public String trendsFinder(){
 		JsonObject responseJson=null;
+		JsonElement je=null;
+		String trends=null;
 		try{			
 			String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query=PHOTO%20SHADOW%20BOX%20TRAY&sort=customerRating&order=desc&numItems=5";
 			HttpClient client = HttpClientBuilder.create().build();
@@ -53,12 +56,20 @@ public class AttachServlet extends HttpServlet {
 			JsonParser parser = new JsonParser();
 			responseJson = parser.parse(result).getAsJsonObject();
 			
+			je=responseJson.getAsJsonArray("items").get(0);
+			
+			JsonParser parser1 = new JsonParser();
+			responseJson = parser1.parse(je.getAsString()).getAsJsonObject();
+			 trends=responseJson.get("categoryPath").toString();
+			
+			
+			
 			System.out.println("Response status"+response.getStatusLine().getStatusCode());
 			System.out.println("Response from wallmart api:##"+response.toString());
 		}catch(Exception e){System.out.println(e);
 			//logger.error(e);
 		}
-		return responseJson;
+		return je.toString()+"::"+trends;
 	}
 
 }
