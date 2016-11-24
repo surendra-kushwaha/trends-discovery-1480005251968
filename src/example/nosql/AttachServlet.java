@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -44,6 +45,7 @@ public class AttachServlet extends HttpServlet {
 		JsonObject responseJson=null;
 		JsonElement je=null;
 		String trends=null;
+		String trendsRetrived[]=null;
 		try{			
 			String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query=PHOTO%20SHADOW%20BOX%20TRAY&sort=customerRating&order=desc&numItems=5";
 			HttpClient client = HttpClientBuilder.create().build();
@@ -55,13 +57,17 @@ public class AttachServlet extends HttpServlet {
 			//JsonObject responseJson = (JsonObject)result;
 			JsonParser parser = new JsonParser();
 			responseJson = parser.parse(result).getAsJsonObject();
+			JsonArray jsonArray=responseJson.getAsJsonArray("items");
 			
-			je=responseJson.getAsJsonArray("items").get(0);
-			
-			JsonParser parser1 = new JsonParser();
-			responseJson = parser1.parse(je.toString()).getAsJsonObject();
-			 trends=responseJson.get("categoryPath").getAsString();
-			
+			 trendsRetrived = new String[5];
+			for(int i=0;i<jsonArray.size();i++){				
+				je=responseJson.getAsJsonArray("items").get(i);			
+				JsonParser parser1 = new JsonParser();
+				responseJson = parser1.parse(je.toString()).getAsJsonObject();
+				trends=responseJson.get("categoryPath").getAsString();
+				trends=trends.substring(trends.lastIndexOf("/"));
+				trendsRetrived[i]=trends;
+			}
 			
 			
 			System.out.println("Response status"+response.getStatusLine().getStatusCode());
@@ -69,7 +75,7 @@ public class AttachServlet extends HttpServlet {
 		}catch(Exception e){System.out.println(e);
 			//logger.error(e);
 		}
-		return je.toString()+"::"+trends;
+		return trendsRetrived.toString()+"::"+trends;
 	}
 
 }
