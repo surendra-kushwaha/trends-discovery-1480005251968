@@ -65,7 +65,7 @@ public class AttachServlet extends HttpServlet {
 				JsonParser parser1 = new JsonParser();
 				responseJson = parser1.parse(je.toString()).getAsJsonObject();
 				trends=responseJson.get("categoryPath").getAsString();
-				trends=trends.substring(trends.lastIndexOf("/"));
+				trends=trends.substring(trends.lastIndexOf("/")+1);
 				trendsRetrived[i]=trends;
 			}
 			
@@ -75,7 +75,7 @@ public class AttachServlet extends HttpServlet {
 		}catch(Exception e){System.out.println(e);
 			//logger.error(e);
 		}
-		return trendsRetrived.toString()+"::"+trends;
+		return trendsRetrived[0]+":"+trendsRetrived[1]+"::"+trends;
 	}
 
 }
