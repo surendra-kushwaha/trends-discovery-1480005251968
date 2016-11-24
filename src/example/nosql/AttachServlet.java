@@ -59,8 +59,8 @@ public class AttachServlet extends HttpServlet {
 			je=responseJson.getAsJsonArray("items").get(0);
 			
 			JsonParser parser1 = new JsonParser();
-			responseJson = parser1.parse(je.getAsString()).getAsJsonObject();
-			 trends=responseJson.get("categoryPath").toString();
+			responseJson = parser1.parse(je.toString()).getAsJsonObject();
+			 trends=responseJson.get("categoryPath").getAsString();
 			
 			
 			
