@@ -1,4 +1,4 @@
-package com.acit.trendsdiscovery.client;
+package com.acit.trendsdiscovery.service;
 
 import java.io.IOException;
 
@@ -25,12 +25,12 @@ import com.google.gson.JsonParser;
 
 @WebServlet("/findTrends")
 @MultipartConfig()
-public class AttachServlet extends HttpServlet {
+public class TrendsDiscoveryService extends HttpServlet {
 
 	private static final int readBufferSize = 8192;
 	private static final long serialVersionUID = 1L;
 	//MetaKeywordsDAO metaKeywordsDAO = new MetaKeywordsDAO();
-	TopicAssociationGraphdb topicAssocGraphdb = new TopicAssociationGraphdb();
+	//TopicAssociationGraphdb topicAssocGraphdb = new TopicAssociationGraphdb();
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
@@ -43,7 +43,7 @@ public class AttachServlet extends HttpServlet {
 		
 		JSONObject categories = new JSONObject();
 		System.out.println("Before category call ");
-    	categories = topicAssocGraphdb.getCategories();
+    	//categories = topicAssocGraphdb.getCategories();
     	System.out.println("after category call ");
         //System.out.println("Categories in memcache not available  : "+categories);
 		
