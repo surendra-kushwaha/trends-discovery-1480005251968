@@ -29,7 +29,7 @@ public class AttachServlet extends HttpServlet {
 
 	private static final int readBufferSize = 8192;
 	private static final long serialVersionUID = 1L;
-	MetaKeywordsDAO metaKeywordsDAO = new MetaKeywordsDAO();
+	//MetaKeywordsDAO metaKeywordsDAO = new MetaKeywordsDAO();
 	TopicAssociationGraphdb topicAssocGraphdb = new TopicAssociationGraphdb();
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
