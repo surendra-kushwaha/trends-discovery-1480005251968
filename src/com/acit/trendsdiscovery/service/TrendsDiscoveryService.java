@@ -29,8 +29,8 @@ public class TrendsDiscoveryService extends HttpServlet {
 
 	private static final int readBufferSize = 8192;
 	private static final long serialVersionUID = 1L;
-	//MetaKeywordsDAO metaKeywordsDAO = new MetaKeywordsDAO();
-	//TopicAssociationGraphdb topicAssocGraphdb = new TopicAssociationGraphdb();
+	MetaKeywordsDAO metaKeywordsDAO = new MetaKeywordsDAO();
+	TopicAssociationGraphdb topicAssocGraphdb = new TopicAssociationGraphdb();
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
@@ -43,9 +43,9 @@ public class TrendsDiscoveryService extends HttpServlet {
 		
 		JSONObject categories = new JSONObject();
 		System.out.println("Before category call ");
-    	//categories = topicAssocGraphdb.getCategories();
+    	categories = topicAssocGraphdb.getCategories();
     	System.out.println("after category call ");
-        //System.out.println("Categories in memcache not available  : "+categories);
+        System.out.println("Categories in memcache not available  : "+categories);
 		
 		response.getWriter().print(trendsFinder()+"Categories ::"+categories);
 		
