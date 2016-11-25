@@ -1,6 +1,7 @@
 package com.acit.trendsdiscovery.service;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -17,6 +18,7 @@ import org.apache.http.util.EntityUtils;
 import org.apache.wink.json4j.JSONObject;
 
 import com.acit.trendsdiscovery.dao.MetaKeywordsDAO;
+import com.acit.trendsdiscovery.model.MetaKeywords;
 import com.acit.trendsdiscovery.util.TopicAssociationGraphdb;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -45,9 +47,10 @@ public class TrendsDiscoveryService extends HttpServlet {
 		System.out.println("Before category call ");
     	categories = topicAssocGraphdb.getCategories();
     	System.out.println("after category call ");
-        System.out.println("Categories in memcache not available  : "+categories);
+        //System.out.println("Categories in memcache not available  : "+categories);
 		
-		response.getWriter().print(trendsFinder()+"Categories ::"+categories);
+		//response.getWriter().print(trendsFinder()+"Categories ::"+categories);
+        response.getWriter().print(trendsFinder());
 		
 		
 	}
@@ -80,6 +83,20 @@ public class TrendsDiscoveryService extends HttpServlet {
 				System.out.println("trends count:"+i+"::"+trends);
 				
 				trendsRetrived[i]=trends;
+				
+				MetaKeywords metaKeyWords=new MetaKeywords();
+				//metaKeyWords.setKeywordName(trends);
+				metaKeyWords.setKeywordName("fall");
+				metaKeyWords.setActive("Y");
+				metaKeyWords.setLastUpdateDttm(new Date());
+				metaKeyWords.setModifiedBy("Raghav");
+				//Add to master table
+				boolean semrushUpdate=metaKeywordsDAO.addSemurshMetaKeyword(metaKeyWords);
+				boolean twitterUpdate=metaKeywordsDAO.addTwitterMetaKeyword(metaKeyWords);
+				
+				System.out.println("update status twitter:"+twitterUpdate);
+				System.out.println("update status twitter:"+semrushUpdate);
+				
 			}
 			
 			

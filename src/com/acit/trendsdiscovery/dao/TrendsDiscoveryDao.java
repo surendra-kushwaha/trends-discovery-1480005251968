@@ -77,7 +77,7 @@ public class TrendsDiscoveryDao {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		boolean topicAvailable = false;
-		List<Integer> topicIdList = new ArrayList<Integer>();
+		//List<Integer> topicIdList = new ArrayList<Integer>();
 
 		try {
 			if ((connection == null) || connection.isClosed()) {
@@ -87,7 +87,7 @@ public class TrendsDiscoveryDao {
 			ps.setString(1, topicName);
 			rs = ps.executeQuery();
 			while (rs.next()) {
-				topicIdList.add(rs.getInt("TOPIC_ID"));
+				//topicIdList.add(rs.getInt("TOPIC_ID"));
 				topicAvailable = true;
 			}
 		} catch (Exception ex) {
@@ -95,7 +95,7 @@ public class TrendsDiscoveryDao {
 		} finally {
 			close(rs, ps, null);
 		}
-		System.out.println("topicIdList size##" + topicIdList);
+		//System.out.println("topicIdList size##" + topicIdList);
 		return topicAvailable;
 	}
 	/****

@@ -196,19 +196,24 @@ public class MetaKeywordsDAO {
 
 		log.info("In MetaKeywordsDAO - addSemurshMetaKeyword >>>");
 		log.info("SQL_INSERT_SEMRUSH_METAKEYWORD : "+SQL_INSERT_SEMRUSH_METAKEYWORD );
-
+		boolean updateSuccessFlag = false;
 		try {
 			if ((connection == null) || connection.isClosed()) {
 				connection = DataBase.getInstance().getConnection();
 			}
-
-			ps = connection.prepareStatement(SQL_INSERT_SEMRUSH_METAKEYWORD);
-			ps.setString(1, metaKeywords.getKeywordName());
-			ps.setDate(2, new Date(metaKeywords.getLastUpdateDttm().getTime()));
-			ps.setString(3, metaKeywords.getActive());
-			ps.setString(4, metaKeywords.getModifiedBy());
-
-			ps.execute();
+			if (!validateSemrushKeyword(metaKeywords.getKeywordName())) {
+				System.out.println("keyword does not exists in semrush master keyword");
+				ps = connection.prepareStatement(SQL_INSERT_SEMRUSH_METAKEYWORD);
+				ps.setString(1, metaKeywords.getKeywordName());
+				ps.setDate(2, new Date(metaKeywords.getLastUpdateDttm().getTime()));
+				ps.setString(3, metaKeywords.getActive());
+				ps.setString(4, metaKeywords.getModifiedBy());
+	
+				int updateflag = ps.executeUpdate();
+				if (updateflag > 0) {
+					updateSuccessFlag = true;
+				}
+			}
 
 		} catch (Exception e) {
 
@@ -220,7 +225,7 @@ public class MetaKeywordsDAO {
 			close(rs, ps, connection);
 		}
 
-		return true;
+		return updateSuccessFlag;
 	}
 
 	/***
@@ -232,20 +237,26 @@ public class MetaKeywordsDAO {
 
 		log.info("In MetaKeywordsDAO - addTwitterMetaKeyword >>>");
 		log.info("SQL_INSERT_TWITTER_METAKEYWORD : "+SQL_INSERT_TWITTER_METAKEYWORD );
+		boolean updateSuccessFlag = false;
 		try {
 			if ((connection == null) || connection.isClosed()) {
 				connection = DataBase.getInstance().getConnection();
 				log.info("DB Connection " + connection);
 			}
 
-			
-			ps = connection.prepareStatement(SQL_INSERT_TWITTER_METAKEYWORD);
-			ps.setString(1, metaKeywords.getKeywordName());
-			ps.setDate(2, new Date(metaKeywords.getLastUpdateDttm().getTime()));
-			ps.setString(3, metaKeywords.getActive());
-			ps.setString(4, metaKeywords.getModifiedBy());
-
-			ps.execute();
+			if (!validateTwitterKeyword(metaKeywords.getKeywordName())) {
+				System.out.println("keyword does not exists in semrush master keyword");
+				ps = connection.prepareStatement(SQL_INSERT_TWITTER_METAKEYWORD);
+				ps.setString(1, metaKeywords.getKeywordName());
+				ps.setDate(2, new Date(metaKeywords.getLastUpdateDttm().getTime()));
+				ps.setString(3, metaKeywords.getActive());
+				ps.setString(4, metaKeywords.getModifiedBy());
+	
+				int updateflag = ps.executeUpdate();
+				if (updateflag > 0) {
+					updateSuccessFlag = true;
+				}
+			}
 
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "error while addTwitterMetaKeyword" + e.getMessage(), e);
@@ -255,7 +266,71 @@ public class MetaKeywordsDAO {
 			close(rs, ps, connection);
 		}
 
-		return true;
+		return updateSuccessFlag;
+	}
+	
+	/****
+	 * Check if the topic exists already
+	 * 
+	 * @param topicName
+	 * @return
+	 */
+	public boolean validateSemrushKeyword(String topicName) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean topicAvailable = false;
+		//List<Integer> topicIdList = new ArrayList<Integer>();
+
+		try {
+			if ((connection == null) || connection.isClosed()) {
+				connection = DataBase.getInstance().getConnection();
+			}
+			ps = connection.prepareStatement("select * from semrush_meta_keywords where keyword_name=?");
+			ps.setString(1, topicName);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				//topicIdList.add(rs.getInt("TOPIC_ID"));
+				topicAvailable = true;
+			}
+		} catch (Exception ex) {
+			System.out.println("Error in check() -->" + ex.getMessage());
+		} finally {
+			close(rs, ps, null);
+		}
+		//System.out.println("topicIdList size##" + topicIdList);
+		return topicAvailable;
+	}
+	
+	/****
+	 * Check if the topic exists already
+	 * 
+	 * @param topicName
+	 * @return
+	 */
+	public boolean validateTwitterKeyword(String topicName) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean topicAvailable = false;
+		//List<Integer> topicIdList = new ArrayList<Integer>();
+
+		try {
+			if ((connection == null) || connection.isClosed()) {
+				connection = DataBase.getInstance().getConnection();
+			}
+			ps = connection.prepareStatement("select * from twitter_meta_keywords where keyword_name=?");
+			ps.setString(1, topicName);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				//topicIdList.add(rs.getInt("TOPIC_ID"));
+				topicAvailable = true;
+			}
+		} catch (Exception ex) {
+			System.out.println("Error in check() -->" + ex.getMessage());
+		} finally {
+			close(rs, ps, null);
+		}
+		//System.out.println("topicIdList size##" + topicIdList);
+		return topicAvailable;
 	}
 	
 	//TOOD::
