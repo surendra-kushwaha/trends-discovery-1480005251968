@@ -14,7 +14,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.apache.wink.json4j.JSONObject;
 
+import com.acit.trendsdiscovery.dao.MetaKeywordsDAO;
+import com.acit.trendsdiscovery.util.TopicAssociationGraphdb;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -26,7 +29,8 @@ public class AttachServlet extends HttpServlet {
 
 	private static final int readBufferSize = 8192;
 	private static final long serialVersionUID = 1L;
-
+	MetaKeywordsDAO metaKeywordsDAO = new MetaKeywordsDAO();
+	TopicAssociationGraphdb topicAssocGraphdb = new TopicAssociationGraphdb();
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
@@ -36,7 +40,13 @@ public class AttachServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		response.getWriter().print(trendsFinder());
+		
+		JSONObject categories = new JSONObject();
+		
+    	categories = topicAssocGraphdb.getCategories();
+        System.out.println("Categories in memcache not available  : "+categories);
+		
+		response.getWriter().print(trendsFinder()+"Categories ::"+categories);
 		
 		
 	}
