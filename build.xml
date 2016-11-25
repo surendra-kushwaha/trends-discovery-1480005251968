@@ -12,7 +12,12 @@
     <path id="classpathDir">
         <pathelement location="bin"/>
     	<pathelement location="WebContent/WEB-INF/lib/gson-2.2.4.jar"/>
-    	<pathelement location="dep-jar/db2jcc.jar"/>
+    	<pathelement location="WebContent/WEB-INF/lib/commons-codec-1.9.jar"/>
+    	<pathelement location="WebContent/WEB-INF/lib/db2jcc.jar"/>
+    	<pathelement location="WebContent/WEB-INF/lib/httpclient-4.4.1.jar"/>
+    	<pathelement location="WebContent/WEB-INF/lib/httpcore-4.4.1.jar"/>
+    	<pathelement location="WebContent/WEB-INF/lib/nosqljson.jar"/>
+    	<pathelement location="WebContent/WEB-INF/lib/wink-json4j-1.4.jar"/>
 	<fileset dir="dep-jar"> 
         	<include name="*.jar"/> 
     	</fileset>
