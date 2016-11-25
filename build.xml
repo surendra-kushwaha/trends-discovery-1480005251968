@@ -11,8 +11,8 @@
 	<property name="warname" value="JavaCloudantApp.war"/>
     <path id="classpathDir">
         <pathelement location="bin"/>
-    	<pathelement location="WebContent/WEB-INF/lib/cloudant-client-2.0.0.jar"/> 
     	<pathelement location="WebContent/WEB-INF/lib/gson-2.2.4.jar"/>
+    	<pathelement location="dep-jar/db2jcc.jar"/>
 	<fileset dir="dep-jar"> 
         	<include name="*.jar"/> 
     	</fileset>

@@ -42,8 +42,9 @@ public class AttachServlet extends HttpServlet {
 		
 		
 		JSONObject categories = new JSONObject();
-		
+		System.out.println("Before category call ");
     	categories = topicAssocGraphdb.getCategories();
+    	System.out.println("after category call ");
         //System.out.println("Categories in memcache not available  : "+categories);
 		
 		response.getWriter().print(trendsFinder()+"Categories ::"+categories);

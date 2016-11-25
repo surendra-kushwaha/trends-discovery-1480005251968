@@ -76,7 +76,7 @@ public class TopicAssociationGraphdb {
 	 */
 	// Get Categories From GraphDB
 	public JSONObject getCategories() {
-
+		System.out.println(" getcategory call ");
 		log.info("In TopicAssociationGraphdb  getCategories >>>> ");
 		JSONObject result = null;
 		
