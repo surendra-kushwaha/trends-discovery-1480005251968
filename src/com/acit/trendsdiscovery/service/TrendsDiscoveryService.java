@@ -2,6 +2,8 @@ package com.acit.trendsdiscovery.service;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -43,69 +45,82 @@ public class TrendsDiscoveryService extends HttpServlet {
 			throws ServletException, IOException {
 		
 		
-		JSONObject categories = new JSONObject();
+		/*JSONObject categories = new JSONObject();
 		System.out.println("Before category call ");
     	categories = topicAssocGraphdb.getCategories();
-    	System.out.println("after category call ");
+    	System.out.println("after category call ");*/
         //System.out.println("Categories in memcache not available  : "+categories);
-		
+		trendsFinder();
 		//response.getWriter().print(trendsFinder()+"Categories ::"+categories);
-        response.getWriter().print(trendsFinder());
+        //response.getWriter().print(trendsFinder());
+		response.getWriter().print("Trends data uploaded to master data.");
 		
 		
 	}
 	
-	public String trendsFinder(){
+	public void trendsFinder(){
 		JsonObject responseJson=null;
 		JsonElement je=null;
 		String trends=null;
 		String trendsRetrived[]=new String[5];
-		try{			
-			String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query=PHOTO%20SHADOW%20BOX%20TRAY&sort=customerRating&order=desc&numItems=5";
-			HttpClient client = HttpClientBuilder.create().build();
-			HttpGet request = new HttpGet(url);
-			request.addHeader("User-Agent", "");
-			HttpResponse response = client.execute(request);
+		try{
 			
-			String result  = EntityUtils.toString(response.getEntity());
-			//JsonObject responseJson = (JsonObject)result;
-			JsonParser parser = new JsonParser();
-			responseJson = parser.parse(result).getAsJsonObject();
-			JsonArray jsonArray=responseJson.getAsJsonArray("items");
+			List<String> trendsData=metaKeywordsDAO.getTrendsDiscoveryData();
 			
-			for(int i=0;i<jsonArray.size();i++){				
-				je=jsonArray.get(i);			
-				JsonParser parser1 = new JsonParser();
-				responseJson = parser1.parse(je.toString()).getAsJsonObject();
-				trends=responseJson.get("categoryPath").getAsString();
-				trends=trends.substring(trends.lastIndexOf("/")+1);
-				
-				System.out.println("trends count:"+i+"::"+trends);
-				
-				trendsRetrived[i]=trends;
-				
-				MetaKeywords metaKeyWords=new MetaKeywords();
-				//metaKeyWords.setKeywordName(trends);
-				metaKeyWords.setKeywordName("fall");
-				metaKeyWords.setActive("Y");
-				metaKeyWords.setLastUpdateDttm(new Date());
-				metaKeyWords.setModifiedBy("Raghav");
-				//Add to master table
-				boolean semrushUpdate=metaKeywordsDAO.addSemurshMetaKeyword(metaKeyWords);
-				boolean twitterUpdate=metaKeywordsDAO.addTwitterMetaKeyword(metaKeyWords);
-				
-				System.out.println("update status twitter:"+twitterUpdate);
-				System.out.println("update status twitter:"+semrushUpdate);
-				
+			System.out.println("trendsData iterator::"+trendsData.size());
+			Iterator<String> iterator = trendsData.iterator();
+			while (iterator.hasNext()) {
+					//System.out.println(iterator.next());
+					String mikSubclass=iterator.next();
+						
+					//String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query=PHOTO%20SHADOW%20BOX%20TRAY&sort=customerRating&order=desc&numItems=5";
+					String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query="+mikSubclass+"&sort=customerRating&order=desc&numItems=5";
+					HttpClient client = HttpClientBuilder.create().build();
+					HttpGet request = new HttpGet(url);
+					request.addHeader("User-Agent", "");
+					HttpResponse response = client.execute(request);
+					
+					String result  = EntityUtils.toString(response.getEntity());
+					//JsonObject responseJson = (JsonObject)result;
+					JsonParser parser = new JsonParser();
+					responseJson = parser.parse(result).getAsJsonObject();
+					JsonArray jsonArray=responseJson.getAsJsonArray("items");
+					
+					for(int i=0;i<jsonArray.size();i++){				
+						je=jsonArray.get(i);			
+						JsonParser parser1 = new JsonParser();
+						responseJson = parser1.parse(je.toString()).getAsJsonObject();
+						trends=responseJson.get("categoryPath").getAsString();
+						trends=trends.substring(trends.lastIndexOf("/")+1);
+						
+						System.out.println("trends count:"+i+"::"+trends);
+						
+						trendsRetrived[i]=trends;
+						
+						MetaKeywords metaKeyWords=new MetaKeywords();
+						//metaKeyWords.setKeywordName(trends);
+						metaKeyWords.setKeywordName("fall");
+						metaKeyWords.setActive("Y");
+						metaKeyWords.setLastUpdateDttm(new Date());
+						metaKeyWords.setModifiedBy("Raghav");
+						//Add to master table
+						boolean semrushUpdate=metaKeywordsDAO.addSemurshMetaKeyword(metaKeyWords);
+						boolean twitterUpdate=metaKeywordsDAO.addTwitterMetaKeyword(metaKeyWords);
+						
+						System.out.println("update status twitter:"+twitterUpdate);
+						System.out.println("update status semrush:"+semrushUpdate);
+						
+					}
+			
 			}
 			
 			
-			System.out.println("Response status"+response.getStatusLine().getStatusCode());
-			System.out.println("Response from wallmart api:##"+response.toString());
+			//System.out.println("Response status"+response.getStatusLine().getStatusCode());
+			//System.out.println("Response from wallmart api:##"+response.toString());
 		}catch(Exception e){System.out.println(e);
 			//logger.error(e);
 		}
-		return trendsRetrived[0]+":"+trendsRetrived[1]+"::"+trends;
+		//return trendsRetrived[0]+":"+trendsRetrived[1]+"::"+trends;
 	}
 
 }

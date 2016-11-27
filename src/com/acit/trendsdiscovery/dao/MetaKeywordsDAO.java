@@ -201,6 +201,9 @@ public class MetaKeywordsDAO {
 			if ((connection == null) || connection.isClosed()) {
 				connection = DataBase.getInstance().getConnection();
 			}
+			
+			System.out.println("metaKeywords.getKeywordName()::"+metaKeywords.getKeywordName());
+			
 			if (!validateSemrushKeyword(metaKeywords.getKeywordName())) {
 				System.out.println("keyword does not exists in semrush master keyword");
 				ps = connection.prepareStatement(SQL_INSERT_SEMRUSH_METAKEYWORD);
@@ -280,7 +283,7 @@ public class MetaKeywordsDAO {
 		ResultSet rs = null;
 		boolean topicAvailable = false;
 		//List<Integer> topicIdList = new ArrayList<Integer>();
-
+		System.out.println("semrush trends name::"+topicName);
 		try {
 			if ((connection == null) || connection.isClosed()) {
 				connection = DataBase.getInstance().getConnection();
@@ -289,6 +292,7 @@ public class MetaKeywordsDAO {
 			ps.setString(1, topicName);
 			rs = ps.executeQuery();
 			while (rs.next()) {
+				System.out.println("topic name present in semrush");
 				//topicIdList.add(rs.getInt("TOPIC_ID"));
 				topicAvailable = true;
 			}
@@ -331,6 +335,49 @@ public class MetaKeywordsDAO {
 		}
 		//System.out.println("topicIdList size##" + topicIdList);
 		return topicAvailable;
+	}
+	
+	/***
+	 * Retrieve list of semrush meta keywords
+	 * @return
+	 */
+	public List<String> getTrendsDiscoveryData() {
+
+		log.info("In MetaKeywordsDAO - getSemrushMetaKeywords >>>");
+		log.info("SQLGET_SEMRUSH_METAKEYWORD : "+SQLGET_SEMRUSH_METAKEYWORD );
+
+		List<String> trendsData = new ArrayList<String>();
+
+		try {
+			if ((connection == null) || connection.isClosed()) {
+				connection = DataBase.getInstance().getConnection();
+			}
+
+			ps = connection.prepareStatement("Select * from TREND_DISCOVERY_INPUTS");
+			//ps.setString(1, keyword.toLowerCase());
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+
+				/*MetaKeywords meKeyword = new MetaKeywords();
+				meKeyword.setKeywordID(rs.getInt("KEYWORD_ID"));
+				meKeyword.setKeywordName(rs.getString("KEYWORD_NAME"));
+				meKeyword.setLastUpdateDttm(rs.getDate("LAST_UPDATE_DTTM"));
+				meKeyword.setActive(rs.getString("ACTIVE"));
+				meKeyword.setModifiedBy(rs.getString("MODIFIED_BY"));
+
+				metaKeywords.add(meKeyword);*/
+				trendsData.add(rs.getString("MIK_SUBCLASS_NAME"));
+
+			}
+
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "error while getSemrushMetaKeywords" + e.getMessage(), e);
+		} finally {
+			close(rs, ps, connection);
+		}
+		return trendsData;
+
 	}
 	
 	//TOOD::
