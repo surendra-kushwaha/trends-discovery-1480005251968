@@ -37,7 +37,8 @@ public class TimerServlet extends HttpServlet {
 
 			String jobName = "Trends discovery job";
 			//int interval = 60;
-			int interval=1440;
+			int interval = 15;
+			//int interval=1440;
 			//Monthly
 			//int interval=43200;
 			boolean state = true;
