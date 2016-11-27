@@ -1,5 +1,6 @@
 package com.acit.trendsdiscovery.scheduler;
 
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -108,7 +109,9 @@ public void trendsFinder(){
 		while (iterator.hasNext()) {
 				//System.out.println(iterator.next());
 				String mikSubclass=iterator.next();
-				System.out.println("mikSubclass value::"+mikSubclass);	
+				System.out.println("mikSubclass value::"+mikSubclass);
+				mikSubclass = URLEncoder.encode(mikSubclass, "UTF-8");
+				System.out.println("mikSubclass encoded value::"+mikSubclass);
 				//String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query=PHOTO%20SHADOW%20BOX%20TRAY&sort=customerRating&order=desc&numItems=5";
 				String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query="+mikSubclass+"&sort=customerRating&order=desc&numItems=5";
 				HttpClient client = HttpClientBuilder.create().build();
@@ -145,10 +148,11 @@ public void trendsFinder(){
 					
 					System.out.println("update status twitter:"+twitterUpdate);
 					System.out.println("update status semrush:"+semrushUpdate);
-					
+					Thread.sleep(1000);
 				}
 		
 		}
+		Thread.sleep(1000);
 		
 		
 		//System.out.println("Response status"+response.getStatusLine().getStatusCode());
