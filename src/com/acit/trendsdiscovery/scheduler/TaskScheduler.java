@@ -96,9 +96,9 @@ public void consumerScheduler(){
 
 public void trendsFinder(){
 	JsonObject responseJson=null;
-	JsonElement je=null;
-	String trends=null;
-	String trendsRetrived[]=new String[5];
+	//JsonElement je=null;
+	//String trends=null;
+	//String trendsRetrived[]=new String[5];
 	try{
 		MetaKeywordsDAO metaKeywordsDAO = new MetaKeywordsDAO();
 		List<String> trendsData=metaKeywordsDAO.getTrendsDiscoveryData();
@@ -108,7 +108,7 @@ public void trendsFinder(){
 		while (iterator.hasNext()) {
 				//System.out.println(iterator.next());
 				String mikSubclass=iterator.next();
-					
+				System.out.println("mikSubclass value::"+mikSubclass);	
 				//String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query=PHOTO%20SHADOW%20BOX%20TRAY&sort=customerRating&order=desc&numItems=5";
 				String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query="+mikSubclass+"&sort=customerRating&order=desc&numItems=5";
 				HttpClient client = HttpClientBuilder.create().build();
@@ -123,15 +123,15 @@ public void trendsFinder(){
 				JsonArray jsonArray=responseJson.getAsJsonArray("items");
 				
 				for(int i=0;i<jsonArray.size();i++){				
-					je=jsonArray.get(i);			
+					JsonElement je=jsonArray.get(i);			
 					JsonParser parser1 = new JsonParser();
 					responseJson = parser1.parse(je.toString()).getAsJsonObject();
-					trends=responseJson.get("categoryPath").getAsString();
+					String trends=responseJson.get("categoryPath").getAsString();
 					trends=trends.substring(trends.lastIndexOf("/")+1);
 					
 					System.out.println("trends #:"+i+"::"+trends);
 					
-					trendsRetrived[i]=trends;
+					//trendsRetrived[i]=trends;
 					
 					MetaKeywords metaKeyWords=new MetaKeywords();
 					metaKeyWords.setKeywordName(trends);
