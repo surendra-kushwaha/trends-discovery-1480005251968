@@ -36,8 +36,8 @@ public class TimerServlet extends HttpServlet {
 			System.out.println("cron job method called");
 
 			String jobName = "Trends discovery job";
-			//int interval = 60;
-			int interval = 15;
+			int interval = 60;
+			//int interval = 15;
 			//int interval=1440;
 			//Monthly
 			//int interval=43200;
