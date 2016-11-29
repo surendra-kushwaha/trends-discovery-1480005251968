@@ -105,6 +105,7 @@ public void trendsFinder(){
 		List<String> trendsData=metaKeywordsDAO.getTrendsDiscoveryData();
 		
 		System.out.println("trendsData iterator::"+trendsData.size());
+		//120 records for each run.
 		Iterator<String> iterator = trendsData.iterator();
 		while (iterator.hasNext()) {
 				//System.out.println(iterator.next());
@@ -148,11 +149,11 @@ public void trendsFinder(){
 					
 					System.out.println("update status twitter:"+twitterUpdate);
 					System.out.println("update status semrush:"+semrushUpdate);
-					Thread.sleep(1000);
+					//Thread.sleep(30000);
 				}
-		
+				Thread.sleep(30000);
 		}
-		Thread.sleep(1000);
+		//Thread.sleep(30000);
 		
 		
 		//System.out.println("Response status"+response.getStatusLine().getStatusCode());

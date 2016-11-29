@@ -352,24 +352,47 @@ public class MetaKeywordsDAO {
 			if ((connection == null) || connection.isClosed()) {
 				connection = DataBase.getInstance().getConnection();
 			}
-
-			ps = connection.prepareStatement("Select * from TREND_DISCOVERY_INPUTS");
+			//introduce 2 new column int id and processed_flag. For every 120 records put flag as Y
+			String sqlString="select * from TRENDS_DISCOVERY_INPUTS where is_processed_flag='N'";
+			
+			ps = connection.prepareStatement(sqlString);
 			//ps.setString(1, keyword.toLowerCase());
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
+				//trendsData.add(rs.getString("MIK_SUBCLASS_ID"));
+				int id=rs.getInt("MIK_SUBCLASS_ID");	
+				System.out.println(id);
+				String sqlstr="select * from TRENDS_DISCOVERY_INPUTS where mik_subclass_id>"+id+" and mik_subclass_id<"+id+120+"";				
+				System.out.println(sqlstr);
+				ps = connection.prepareStatement(sqlstr);
+				//ps = connection.prepareStatement("Select * from TREND_DISCOVERY_INPUTS");
+				//ps.setString(1, keyword.toLowerCase());
+				rs = ps.executeQuery();
 
-				/*MetaKeywords meKeyword = new MetaKeywords();
-				meKeyword.setKeywordID(rs.getInt("KEYWORD_ID"));
-				meKeyword.setKeywordName(rs.getString("KEYWORD_NAME"));
-				meKeyword.setLastUpdateDttm(rs.getDate("LAST_UPDATE_DTTM"));
-				meKeyword.setActive(rs.getString("ACTIVE"));
-				meKeyword.setModifiedBy(rs.getString("MODIFIED_BY"));
+				while (rs.next()) {
 
-				metaKeywords.add(meKeyword);*/
-				trendsData.add(rs.getString("MIK_SUBCLASS_NAME"));
+					/*MetaKeywords meKeyword = new MetaKeywords();
+					meKeyword.setKeywordID(rs.getInt("KEYWORD_ID"));
+					meKeyword.setKeywordName(rs.getString("KEYWORD_NAME"));
+					meKeyword.setLastUpdateDttm(rs.getDate("LAST_UPDATE_DTTM"));
+					meKeyword.setActive(rs.getString("ACTIVE"));
+					meKeyword.setModifiedBy(rs.getString("MODIFIED_BY"));
 
+					metaKeywords.add(meKeyword);*/
+					trendsData.add(rs.getString("MIK_SUBCLASS_NAME"));
+
+				}
+				
+				String sqlstr1="update TRENDS_DISCOVERY_INPUTS set is_processed_flag='N' where mik_subclass_id="+id+121+"";	
+				System.out.println(sqlstr1);
+				ps = connection.prepareStatement(sqlstr1);
+				//ps = connection.prepareStatement("Select * from TREND_DISCOVERY_INPUTS");
+				//ps.setString(1, keyword.toLowerCase());
+				ps.executeUpdate();
+								
 			}
+			
 
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "error while getSemrushMetaKeywords" + e.getMessage(), e);
