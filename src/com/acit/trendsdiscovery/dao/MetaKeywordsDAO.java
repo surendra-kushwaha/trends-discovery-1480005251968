@@ -358,40 +358,39 @@ public class MetaKeywordsDAO {
 			ps = connection.prepareStatement(sqlString);
 			//ps.setString(1, keyword.toLowerCase());
 			rs = ps.executeQuery();
-
+			int id=0;
 			while (rs.next()) {
 				//trendsData.add(rs.getString("MIK_SUBCLASS_ID"));
-				int id=rs.getInt("MIK_SUBCLASS_ID");	
-				System.out.println(id);
-				String sqlstr="select * from TRENDS_DISCOVERY_INPUTS where mik_subclass_id>"+id+" and mik_subclass_id<"+id+120+"";				
-				System.out.println(sqlstr);
-				ps = connection.prepareStatement(sqlstr);
-				//ps = connection.prepareStatement("Select * from TREND_DISCOVERY_INPUTS");
-				//ps.setString(1, keyword.toLowerCase());
-				rs = ps.executeQuery();
-
-				while (rs.next()) {
-
-					/*MetaKeywords meKeyword = new MetaKeywords();
-					meKeyword.setKeywordID(rs.getInt("KEYWORD_ID"));
-					meKeyword.setKeywordName(rs.getString("KEYWORD_NAME"));
-					meKeyword.setLastUpdateDttm(rs.getDate("LAST_UPDATE_DTTM"));
-					meKeyword.setActive(rs.getString("ACTIVE"));
-					meKeyword.setModifiedBy(rs.getString("MODIFIED_BY"));
-
-					metaKeywords.add(meKeyword);*/
-					trendsData.add(rs.getString("MIK_SUBCLASS_NAME"));
-
-				}
-				
-				String sqlstr1="update TRENDS_DISCOVERY_INPUTS set is_processed_flag='N' where mik_subclass_id="+id+121+"";	
-				System.out.println(sqlstr1);
-				ps = connection.prepareStatement(sqlstr1);
-				//ps = connection.prepareStatement("Select * from TREND_DISCOVERY_INPUTS");
-				//ps.setString(1, keyword.toLowerCase());
-				ps.executeUpdate();
-								
+				id=rs.getInt("MIK_SUBCLASS_ID");									
 			}
+			
+			System.out.println(id);
+			String sqlstr="select * from TRENDS_DISCOVERY_INPUTS where mik_subclass_id>"+id+" and mik_subclass_id<"+id+120+"";				
+			System.out.println(sqlstr);
+			ps = connection.prepareStatement(sqlstr);
+			//ps = connection.prepareStatement("Select * from TREND_DISCOVERY_INPUTS");
+			//ps.setString(1, keyword.toLowerCase());
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				trendsData.add(rs.getString("MIK_SUBCLASS_NAME"));
+
+			}
+			
+			int idNew=id+121;
+			String sqlstr1="update TRENDS_DISCOVERY_INPUTS set is_processed_flag='N' where mik_subclass_id="+idNew+"";	
+			System.out.println(sqlstr1);
+			ps = connection.prepareStatement(sqlstr1);
+			//ps = connection.prepareStatement("Select * from TREND_DISCOVERY_INPUTS");
+			//ps.setString(1, keyword.toLowerCase());
+			ps.executeUpdate();
+			
+			String sqlstr2="update TRENDS_DISCOVERY_INPUTS set is_processed_flag='NA' where mik_subclass_id="+id+"";	
+			System.out.println(sqlstr2);
+			ps = connection.prepareStatement(sqlstr2);
+			//ps = connection.prepareStatement("Select * from TREND_DISCOVERY_INPUTS");
+			//ps.setString(1, keyword.toLowerCase());
+			ps.executeUpdate();
 			
 
 		} catch (Exception e) {
