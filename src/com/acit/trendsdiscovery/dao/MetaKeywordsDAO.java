@@ -360,7 +360,7 @@ public class MetaKeywordsDAO {
 			}
 			
 			int idNew=id+120;
-			String sqlstr="select * from TRENDS_DISCOVERY_INPUTS where mik_subclass_id>="+id+" and mik_subclass_id=<"+idNew+"";				
+			String sqlstr="select * from TRENDS_DISCOVERY_INPUTS where mik_subclass_id>"+id+" and mik_subclass_id<"+idNew+"";				
 			System.out.println(sqlstr);
 			ps = connection.prepareStatement(sqlstr);
 			rs = ps.executeQuery();
