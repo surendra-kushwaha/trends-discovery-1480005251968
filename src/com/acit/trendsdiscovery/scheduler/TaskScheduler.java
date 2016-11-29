@@ -102,15 +102,14 @@ public void trendsFinder(){
 	//String trendsRetrived[]=new String[5];
 	try{
 		MetaKeywordsDAO metaKeywordsDAO = new MetaKeywordsDAO();
-		List<String> trendsData=metaKeywordsDAO.getTrendsDiscoveryData();
-		
+		List<String> trendsData=metaKeywordsDAO.getTrendsDiscoveryData();		
 		System.out.println("trendsData iterator::"+trendsData.size());
 		//120 records for each run.
 		Iterator<String> iterator = trendsData.iterator();
 		while (iterator.hasNext()) {
 				//System.out.println(iterator.next());
 				String mikSubclass=iterator.next();
-				System.out.println("mikSubclass value::"+mikSubclass);
+				//System.out.println("mikSubclass value::"+mikSubclass);
 				mikSubclass = URLEncoder.encode(mikSubclass, "UTF-8");
 				System.out.println("mikSubclass encoded value::"+mikSubclass);
 				//String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query=PHOTO%20SHADOW%20BOX%20TRAY&sort=customerRating&order=desc&numItems=5";
@@ -142,12 +141,12 @@ public void trendsFinder(){
 					//metaKeyWords.setKeywordName("fall");
 					metaKeyWords.setActive("Y");
 					metaKeyWords.setLastUpdateDttm(new Date());
-					metaKeyWords.setModifiedBy("Raghav");
+					metaKeyWords.setModifiedBy("Sheethal");
 					//Add to master table
 					boolean semrushUpdate=metaKeywordsDAO.addSemurshMetaKeyword(metaKeyWords);
 					boolean twitterUpdate=metaKeywordsDAO.addTwitterMetaKeyword(metaKeyWords);
 					
-					System.out.println("update status twitter:"+twitterUpdate);
+					//System.out.println("update status twitter:"+twitterUpdate);
 					System.out.println("update status semrush:"+semrushUpdate);
 					//Thread.sleep(30000);
 				}

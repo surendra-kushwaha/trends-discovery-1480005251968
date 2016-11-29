@@ -338,68 +338,51 @@ public class MetaKeywordsDAO {
 	}
 	
 	/***
-	 * Retrieve list of semrush meta keywords
+	 * Retrieve list of trends discovery keywords
 	 * @return
 	 */
 	public List<String> getTrendsDiscoveryData() {
-
-		log.info("In MetaKeywordsDAO - getSemrushMetaKeywords >>>");
-		log.info("SQLGET_SEMRUSH_METAKEYWORD : "+SQLGET_SEMRUSH_METAKEYWORD );
-
+		log.info("In MetaKeywordsDAO - getTrendsDiscoveryData >>>");
+		//log.info("SQLGET_SEMRUSH_METAKEYWORD : "+SQLGET_SEMRUSH_METAKEYWORD );
 		List<String> trendsData = new ArrayList<String>();
-
 		try {
 			if ((connection == null) || connection.isClosed()) {
 				connection = DataBase.getInstance().getConnection();
 			}
 			//introduce 2 new column int id and processed_flag. For every 120 records put flag as Y
-			String sqlString="select * from TRENDS_DISCOVERY_INPUTS where is_processed_flag='N'";
-			
+			String sqlString="select * from TRENDS_DISCOVERY_INPUTS where is_processed_flag='N'";			
 			ps = connection.prepareStatement(sqlString);
 			//ps.setString(1, keyword.toLowerCase());
 			rs = ps.executeQuery();
 			int id=0;
 			while (rs.next()) {
-				//trendsData.add(rs.getString("MIK_SUBCLASS_ID"));
 				id=rs.getInt("MIK_SUBCLASS_ID");									
 			}
-			int idNew=id+121;
-			System.out.println(id);
-			String sqlstr="select * from TRENDS_DISCOVERY_INPUTS where mik_subclass_id>"+id+" and mik_subclass_id<"+idNew+"";				
+			
+			int idNew=id+120;
+			String sqlstr="select * from TRENDS_DISCOVERY_INPUTS where mik_subclass_id>="+id+" and mik_subclass_id=<"+idNew+"";				
 			System.out.println(sqlstr);
 			ps = connection.prepareStatement(sqlstr);
-			//ps = connection.prepareStatement("Select * from TREND_DISCOVERY_INPUTS");
-			//ps.setString(1, keyword.toLowerCase());
 			rs = ps.executeQuery();
-
 			while (rs.next()) {
 				trendsData.add(rs.getString("MIK_SUBCLASS_NAME"));
-
 			}
-			
-			
+						
 			String sqlstr1="update TRENDS_DISCOVERY_INPUTS set is_processed_flag='N' where mik_subclass_id="+idNew+"";	
-			System.out.println(sqlstr1);
+			//System.out.println(sqlstr1);
 			ps = connection.prepareStatement(sqlstr1);
-			//ps = connection.prepareStatement("Select * from TREND_DISCOVERY_INPUTS");
-			//ps.setString(1, keyword.toLowerCase());
 			ps.executeUpdate();
 			
 			String sqlstr2="update TRENDS_DISCOVERY_INPUTS set is_processed_flag='NA' where mik_subclass_id="+id+"";	
-			System.out.println(sqlstr2);
+			//System.out.println(sqlstr2);
 			ps = connection.prepareStatement(sqlstr2);
-			//ps = connection.prepareStatement("Select * from TREND_DISCOVERY_INPUTS");
-			//ps.setString(1, keyword.toLowerCase());
 			ps.executeUpdate();
-			
-
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "error while getSemrushMetaKeywords" + e.getMessage(), e);
 		} finally {
 			close(rs, ps, connection);
 		}
 		return trendsData;
-
 	}
 	
 	//TOOD::
