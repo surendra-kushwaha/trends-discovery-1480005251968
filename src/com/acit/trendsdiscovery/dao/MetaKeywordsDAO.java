@@ -363,9 +363,9 @@ public class MetaKeywordsDAO {
 				//trendsData.add(rs.getString("MIK_SUBCLASS_ID"));
 				id=rs.getInt("MIK_SUBCLASS_ID");									
 			}
-			
+			int idNew=id+121;
 			System.out.println(id);
-			String sqlstr="select * from TRENDS_DISCOVERY_INPUTS where mik_subclass_id>"+id+" and mik_subclass_id<"+id+120+"";				
+			String sqlstr="select * from TRENDS_DISCOVERY_INPUTS where mik_subclass_id>"+id+" and mik_subclass_id<"+idNew+"";				
 			System.out.println(sqlstr);
 			ps = connection.prepareStatement(sqlstr);
 			//ps = connection.prepareStatement("Select * from TREND_DISCOVERY_INPUTS");
@@ -377,7 +377,7 @@ public class MetaKeywordsDAO {
 
 			}
 			
-			int idNew=id+121;
+			
 			String sqlstr1="update TRENDS_DISCOVERY_INPUTS set is_processed_flag='N' where mik_subclass_id="+idNew+"";	
 			System.out.println(sqlstr1);
 			ps = connection.prepareStatement(sqlstr1);
