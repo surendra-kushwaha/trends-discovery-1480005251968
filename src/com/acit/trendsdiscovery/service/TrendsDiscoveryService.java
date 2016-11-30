@@ -112,10 +112,11 @@ public class TrendsDiscoveryService extends HttpServlet {
 						//InputStreamReader in = semrushClient.getTrendsFromSemrushAPI("JEWELRY","Ph");
 						InputStreamReader in = semrushClient.getTrendsFromSemrushAPI("http://www.walmart.com/","Ph");
 						//InputStreamReader in = semrushClient.getTrendsFromSemrushAPI("Kids crafts",System.getenv("exportColumns"));
+						List<String> keywordResult=null;
 						if(in != null){							
-							JSONObject keywordResult = semrushClient.processKeywordResults("http://www.walmart.com/", "Ph",in);
+							keywordResult = semrushClient.processKeywordResults("http://www.walmart.com/", "Ph",in);
 							//JSONObject keywordResult = semrushClient.processKeywordResults("Kids crafts", System.getenv("exportColumns"),in);	
-							System.out.println("Keyword JSON : "+keywordResult);							
+							System.out.println("Keyword list : "+keywordResult);							
 							// Send the Semrush Keyword Result to Message Hub
 							//String topicName = System.getenv("topicName");
 							//postClient.postSemurshToMessageHub("topic=" + topicName + "&data=" + keywordResult);
@@ -124,20 +125,28 @@ public class TrendsDiscoveryService extends HttpServlet {
 							
 						}
 						
-						MetaKeywords metaKeyWords=new MetaKeywords();
-						//metaKeyWords.setKeywordName(trends);
-						metaKeyWords.setKeywordName("fall");
-						metaKeyWords.setActive("Y");
-						metaKeyWords.setLastUpdateDttm(new Date());
-						metaKeyWords.setModifiedBy("Raghav");
-						//Add to master table
-						//boolean semrushUpdate=metaKeywordsDAO.addSemurshMetaKeyword(metaKeyWords);
-						//boolean twitterUpdate=metaKeywordsDAO.addTwitterMetaKeyword(metaKeyWords);
-						
-						//System.out.println("update status twitter:"+twitterUpdate);
-						//System.out.println("update status semrush:"+semrushUpdate);
+						Iterator<String> keyIterator = keywordResult.iterator();
+						while (keyIterator.hasNext()) {
+							MetaKeywords metaKeyWords=new MetaKeywords();
+							//metaKeyWords.setKeywordName(trends);
+							String keyword=keyIterator.next();
+							System.out.println("keyword##"+keyword);
+							//metaKeyWords.setKeywordName(keyword);
+							metaKeyWords.setKeywordName("fall");
+							metaKeyWords.setActive("Y");
+							metaKeyWords.setLastUpdateDttm(new Date());
+							metaKeyWords.setModifiedBy("Raghav");
+							//Add to master table
+							//boolean semrushUpdate=metaKeywordsDAO.addSemurshMetaKeyword(metaKeyWords);
+							//boolean twitterUpdate=metaKeywordsDAO.addTwitterMetaKeyword(metaKeyWords);
+							
+							//System.out.println("update status twitter:"+twitterUpdate);
+							//System.out.println("update status semrush:"+semrushUpdate);
+						}
 						
 					}
+					
+					break;
 			
 			}
 			

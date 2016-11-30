@@ -7,7 +7,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONObject;
@@ -53,9 +55,10 @@ public class SemrushClient {
 	}
 	
 
-	public JSONObject processKeywordResults(String searchKeyword, String export_columns , InputStreamReader in){	
+	public List<String> processKeywordResults(String searchKeyword, String export_columns , InputStreamReader in){	
 		
 		System.out.println("In SemrushClient -processKeywordResults ");
+		List<String> keywordsList=new ArrayList<String>();
 		try
 		{
 			String keyword = searchKeyword.replace(" ", "+");
@@ -96,7 +99,7 @@ public class SemrushClient {
 					
 					switch (columnIndex.get(i)) {
 					
-						case "Ph":
+						case "Ph":  keywordsList.add(keywords[i]);
 									semrushKeyword.put("Keyword", keywords[i]);
 									break;
 						
@@ -128,7 +131,7 @@ public class SemrushClient {
 				
 				br.close();
 				
-				return semrushResult;
+				return keywordsList;
 			
 		}catch(Exception e ){
 			e.printStackTrace();
