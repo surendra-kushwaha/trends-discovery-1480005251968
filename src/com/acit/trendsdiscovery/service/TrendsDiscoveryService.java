@@ -98,7 +98,7 @@ public class TrendsDiscoveryService extends HttpServlet {
 						responseJson = parser1.parse(je.toString()).getAsJsonObject();
 						trends=responseJson.get("productUrl").getAsString();
 						
-						String organicUrl=trends.substring(trends.lastIndexOf("?l=")+3,trends.lastIndexOf("47150667")-1);
+						//String organicUrl=trends.substring(trends.lastIndexOf("?l=")+3,trends.lastIndexOf("47150667")-1);
 						
 						//trends=trends.substring(trends.lastIndexOf("/")+1);
 						
