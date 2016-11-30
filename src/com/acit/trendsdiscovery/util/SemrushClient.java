@@ -27,7 +27,8 @@ public class SemrushClient {
 		System.out.println("Search Keyword : "+keyword);
 		
 		try{
-		URL url = new URL(System.getenv("semrushAPIEndpoint")
+			//System.getenv("semrushAPIEndpoint")
+		URL url = new URL("http://api.semrush.com/"
 				+ "?type=url_organic"
 				//+ "&phrase="+keyword //search keyword
 				+ "&url="+keyword //search keyword
