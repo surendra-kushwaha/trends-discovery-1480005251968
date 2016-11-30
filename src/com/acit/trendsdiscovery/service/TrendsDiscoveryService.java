@@ -2,6 +2,7 @@ package com.acit.trendsdiscovery.service;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -72,8 +73,11 @@ public class TrendsDiscoveryService extends HttpServlet {
 			System.out.println("trendsData iterator::"+trendsData.size());
 			Iterator<String> iterator = trendsData.iterator();
 			while (iterator.hasNext()) {
-					//System.out.println(iterator.next());
-					String mikSubclass=iterator.next();
+				//System.out.println(iterator.next());
+				String mikSubclass=iterator.next();
+				//System.out.println("mikSubclass value::"+mikSubclass);
+				mikSubclass = URLEncoder.encode(mikSubclass, "UTF-8");
+				System.out.println("mikSubclass encoded value::"+mikSubclass);
 						
 					//String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query=PHOTO%20SHADOW%20BOX%20TRAY&sort=customerRating&order=desc&numItems=5";
 					String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query="+mikSubclass+"&sort=relevance&numItems=5";
