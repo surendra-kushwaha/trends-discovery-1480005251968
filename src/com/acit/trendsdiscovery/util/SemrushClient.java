@@ -32,9 +32,10 @@ public class SemrushClient {
 				+ "?type=url_organic"
 				//+ "&phrase="+keyword //search keyword
 				+ "&url="+keyword //search keyword
-				+ "&key=" + System.getenv("semrushApiKey") //semrush API key(key=20230bcb09669464b97530a41e8e32c3)
+				//+ "&key=" + System.getenv("semrushApiKey") //semrush API key(key=20230bcb09669464b97530a41e8e32c3)
+				+ "&key=20230bcb09669464b97530a41e8e32c3" //semrush API key(key=20230bcb09669464b97530a41e8e32c3)
 				+ "&display_limit=10"  //retrieve 10 records
-				+ "&export_columns="+export_columns  //colums to retrieve
+				+ "&export_columns="+export_columns  //columns to retrieve
 				+ "&database=us");  //currently limited to US DB
 		
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
