@@ -68,19 +68,19 @@ public class TrendsDiscoveryService extends HttpServlet {
 		String trendsRetrived[]=new String[5];
 		try{
 			
-			List<String> trendsData=metaKeywordsDAO.getTrendsDiscoveryData();
+			List<String> departments=metaKeywordsDAO.getDepartments();
 			
-			System.out.println("trendsData iterator::"+trendsData.size());
-			Iterator<String> iterator = trendsData.iterator();
+			System.out.println("departments iterator::"+departments.size());
+			Iterator<String> iterator = departments.iterator();
 			while (iterator.hasNext()) {
 				//System.out.println(iterator.next());
-				String mikSubclass=iterator.next();
+				String mikDepartment=iterator.next();
 				//System.out.println("mikSubclass value::"+mikSubclass);
-				mikSubclass = URLEncoder.encode(mikSubclass, "UTF-8");
-				System.out.println("mikSubclass encoded value::"+mikSubclass);
+				mikDepartment = URLEncoder.encode(mikDepartment, "UTF-8");
+				System.out.println("mikDepartment encoded value::"+mikDepartment);
 						
 					//String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query=PHOTO%20SHADOW%20BOX%20TRAY&sort=customerRating&order=desc&numItems=5";
-					String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query="+mikSubclass+"&sort=relevance&numItems=5";
+					String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query="+mikDepartment+"&sort=relevance&numItems=5";
 					HttpClient client = HttpClientBuilder.create().build();
 					HttpGet request = new HttpGet(url);
 					request.addHeader("User-Agent", "");

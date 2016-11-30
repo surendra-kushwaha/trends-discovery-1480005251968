@@ -384,7 +384,36 @@ public class MetaKeywordsDAO {
 		}
 		return trendsData;
 	}
-	
+
+	/***
+	 * Retrieve list of trends discovery keywords
+	 * @return
+	 */
+	public List<String> getDepartments() {
+		log.info("In MetaKeywordsDAO - getTrendsDiscoveryData >>>");
+		//log.info("SQLGET_SEMRUSH_METAKEYWORD : "+SQLGET_SEMRUSH_METAKEYWORD );
+		List<String> departmentList = new ArrayList<String>();
+		try {
+			if ((connection == null) || connection.isClosed()) {
+				connection = DataBase.getInstance().getConnection();
+			}
+			//introduce 2 new column int id and processed_flag. For every 120 records put flag as Y
+			String sqlString="select * from MICHAELS_DEPARTMENTS";			
+			ps = connection.prepareStatement(sqlString);
+			//ps.setString(1, keyword.toLowerCase());
+			rs = ps.executeQuery();
+			//int id=0;
+			while (rs.next()) {
+				departmentList.add(rs.getString("MIK_DEPT_NAME"));									
+			}
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "error while getSemrushMetaKeywords" + e.getMessage(), e);
+		} finally {
+			close(rs, ps, connection);
+		}
+		return departmentList;
+	}
+
 	//TOOD::
 	
 	public boolean updateSemrushMetaKeywordStatus(MetaKeywords metaKeywords) {
