@@ -98,12 +98,12 @@ public class TrendsDiscoveryService extends HttpServlet {
 						responseJson = parser1.parse(je.toString()).getAsJsonObject();
 						trends=responseJson.get("productUrl").getAsString();
 						
-						/*String trendsUrl=trends.substring(trends.lastIndexOf("?l=")+3,trends.lastIndexOf("47150667")-1);
+						String organicUrl=trends.substring(trends.lastIndexOf("?l=")+3,trends.lastIndexOf("47150667")-1);
 						
-						trends=trends.substring(trends.lastIndexOf("/")+1);
+						//trends=trends.substring(trends.lastIndexOf("/")+1);
 						
-						System.out.println("trends count:"+i+"::"+trends);						
-						trendsRetrived[i]=trends;*/
+						//System.out.println("trends count:"+i+"::"+trends);						
+						//trendsRetrived[i]=trends;
 						
 						//Semrush call
 						System.out.println("getTrendsForAllKeywords Rest ");
@@ -111,10 +111,11 @@ public class TrendsDiscoveryService extends HttpServlet {
 						//semrushClient.getTrendsFromSemrushAPI("",System.getenv("exportColumns"));						
 						//InputStreamReader in = semrushClient.getTrendsFromSemrushAPI("JEWELRY","Ph");
 						InputStreamReader in = semrushClient.getTrendsFromSemrushAPI("http://www.walmart.com/","Ph");
-						//InputStreamReader in = semrushClient.getTrendsFromSemrushAPI("Kids crafts",System.getenv("exportColumns"));
+						//InputStreamReader in = semrushClient.getTrendsFromSemrushAPI(organicUrl,System.getenv("exportColumns"));
 						List<String> keywordResult=null;
 						if(in != null){							
 							keywordResult = semrushClient.processKeywordResults("http://www.walmart.com/", "Ph",in);
+							//keywordResult = semrushClient.processKeywordResults(organicUrl, "Ph",in);
 							//JSONObject keywordResult = semrushClient.processKeywordResults("Kids crafts", System.getenv("exportColumns"),in);	
 							System.out.println("Keyword list : "+keywordResult);							
 							// Send the Semrush Keyword Result to Message Hub
@@ -131,17 +132,17 @@ public class TrendsDiscoveryService extends HttpServlet {
 							//metaKeyWords.setKeywordName(trends);
 							String keyword=keyIterator.next();
 							System.out.println("keyword##"+keyword);
-							//metaKeyWords.setKeywordName(keyword);
-							metaKeyWords.setKeywordName("fall");
+							metaKeyWords.setKeywordName(keyword);
+							//metaKeyWords.setKeywordName("fall");
 							metaKeyWords.setActive("Y");
 							metaKeyWords.setLastUpdateDttm(new Date());
 							metaKeyWords.setModifiedBy("Raghav");
 							//Add to master table
-							//boolean semrushUpdate=metaKeywordsDAO.addSemurshMetaKeyword(metaKeyWords);
-							//boolean twitterUpdate=metaKeywordsDAO.addTwitterMetaKeyword(metaKeyWords);
+							boolean semrushUpdate=metaKeywordsDAO.addSemurshMetaKeyword(metaKeyWords);
+							boolean twitterUpdate=metaKeywordsDAO.addTwitterMetaKeyword(metaKeyWords);
 							
-							//System.out.println("update status twitter:"+twitterUpdate);
-							//System.out.println("update status semrush:"+semrushUpdate);
+							System.out.println("update status twitter:"+twitterUpdate);
+							System.out.println("update status semrush:"+semrushUpdate);
 						}
 						
 					}
