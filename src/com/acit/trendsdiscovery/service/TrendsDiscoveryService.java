@@ -3,6 +3,7 @@ package com.acit.trendsdiscovery.service;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -19,7 +20,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import org.apache.wink.json4j.JSONObject;
 
 import com.acit.trendsdiscovery.dao.MetaKeywordsDAO;
 import com.acit.trendsdiscovery.model.MetaKeywords;
@@ -53,10 +53,11 @@ public class TrendsDiscoveryService extends HttpServlet {
     	categories = topicAssocGraphdb.getCategories();
     	System.out.println("after category call ");*/
         //System.out.println("Categories in memcache not available  : "+categories);
-		trendsFinderSemrush();
+		//trendsFinderSemrush();
+		trendsFinder();
 		//response.getWriter().print(trendsFinder()+"Categories ::"+categories);
         //response.getWriter().print(trendsFinder());
-		response.getWriter().print("Trends data uploaded to master data.");
+		response.getWriter().print("Trends data uploaded to master data."+trendsFinder().toString());
 		
 		
 	}
@@ -160,14 +161,15 @@ public class TrendsDiscoveryService extends HttpServlet {
 		//return trendsRetrived[0]+":"+trendsRetrived[1]+"::"+trends;
 	}
 	
-	public void trendsFinder(){
+	public List<String> trendsFinder(){
 		JsonObject responseJson=null;
 		JsonElement je=null;
 		String trends=null;
 		String trendsRetrived[]=new String[5];
+		List<String> relatedTrendsData=new ArrayList<String>();
 		try{
 			
-			List<String> trendsData=metaKeywordsDAO.getTrendsDiscoveryData();
+			List<String> trendsData=metaKeywordsDAO.getTrendsDiscoveryFirst50();
 			
 			System.out.println("trendsData iterator::"+trendsData.size());
 			Iterator<String> iterator = trendsData.iterator();
@@ -195,9 +197,10 @@ public class TrendsDiscoveryService extends HttpServlet {
 						trends=responseJson.get("categoryPath").getAsString();
 						trends=trends.substring(trends.lastIndexOf("/")+1);
 						
-						System.out.println("trends count:"+i+"::"+trends);
+						relatedTrendsData.add(mikSubclass+":"+i+":"+trends);
+						System.out.println(mikSubclass+":"+i+"::"+trends);
 						
-						trendsRetrived[i]=trends;
+						/*trendsRetrived[i]=trends;
 						
 						MetaKeywords metaKeyWords=new MetaKeywords();
 						//metaKeyWords.setKeywordName(trends);
@@ -210,7 +213,7 @@ public class TrendsDiscoveryService extends HttpServlet {
 						boolean twitterUpdate=metaKeywordsDAO.addTwitterMetaKeyword(metaKeyWords);
 						
 						System.out.println("update status twitter:"+twitterUpdate);
-						System.out.println("update status semrush:"+semrushUpdate);
+						System.out.println("update status semrush:"+semrushUpdate);*/
 						
 					}
 			
@@ -222,7 +225,7 @@ public class TrendsDiscoveryService extends HttpServlet {
 		}catch(Exception e){System.out.println(e);
 			//logger.error(e);
 		}
-		//return trendsRetrived[0]+":"+trendsRetrived[1]+"::"+trends;
+		return relatedTrendsData;
 	}
 
 }
