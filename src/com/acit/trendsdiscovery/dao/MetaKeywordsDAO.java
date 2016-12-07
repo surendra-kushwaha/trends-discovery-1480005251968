@@ -428,7 +428,7 @@ public class MetaKeywordsDAO {
 				connection = DataBase.getInstance().getConnection();
 			}
 			//introduce 2 new column int id and processed_flag. For every 120 records put flag as Y
-			String sqlString="select * from MICHAELS_DEPARTMENTS";			
+			String sqlString="select * from MICHAELS_DEPARTMENTS where mik_dept_name is not null";			
 			ps = connection.prepareStatement(sqlString);
 			//ps.setString(1, keyword.toLowerCase());
 			rs = ps.executeQuery();
