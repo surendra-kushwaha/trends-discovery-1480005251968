@@ -176,7 +176,8 @@ public class TrendsDiscoveryService extends HttpServlet {
 			while (iterator.hasNext()) {
 					//System.out.println(iterator.next());
 					String mikSubclass=iterator.next();
-						
+					mikSubclass = URLEncoder.encode(mikSubclass, "UTF-8");
+					System.out.println("mikSubclass encoded value::"+mikSubclass);	
 					//String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query=PHOTO%20SHADOW%20BOX%20TRAY&sort=customerRating&order=desc&numItems=5";
 					String url = "http://api.walmartlabs.com/v1/search?apiKey=agevmwa5rhme979szegdj3v6&query="+mikSubclass+"&sort=relevance&numItems=5";
 					HttpClient client = HttpClientBuilder.create().build();
@@ -216,7 +217,7 @@ public class TrendsDiscoveryService extends HttpServlet {
 						System.out.println("update status semrush:"+semrushUpdate);*/
 						
 					}
-			
+			 Thread.sleep(1000);
 			}
 			
 			
