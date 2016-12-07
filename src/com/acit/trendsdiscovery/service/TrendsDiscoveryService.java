@@ -169,7 +169,8 @@ public class TrendsDiscoveryService extends HttpServlet {
 		List<String> relatedTrendsData=new ArrayList<String>();
 		try{
 			
-			List<String> trendsData=metaKeywordsDAO.getTrendsDiscoveryFirst50();
+			//List<String> trendsData=metaKeywordsDAO.getTrendsDiscoveryFirst50();
+			List<String> trendsData=metaKeywordsDAO.getDepartments();
 			
 			System.out.println("trendsData iterator::"+trendsData.size());
 			Iterator<String> iterator = trendsData.iterator();
