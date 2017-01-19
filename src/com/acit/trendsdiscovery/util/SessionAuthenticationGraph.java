@@ -1,4 +1,5 @@
 package com.acit.trendsdiscovery.util;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.commons.codec.binary.Base64;
@@ -9,6 +10,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.wink.json4j.JSONObject;
+
+import com.accenture.acit.retail.util.DataBase;
 
 //import com.accenture.acit.retail.trends.dao.DataSourceDAO;
 
@@ -52,11 +55,16 @@ public class SessionAuthenticationGraph {
 		int urlLength = requestURL.length();
 		requestURL = requestURL.substring(0, (urlLength-1));
 		requestURL += "_session";
-		
+		Map hashMap=DataBase.getGraphDBVCAP();
+		String username=(String)hashMap.get("GRAPH_DB_USER_ID");
+		String password=(String)hashMap.get("GRAPH_DB_PASSWORD");
 		//Graph credentials
-		byte[] userpass = (System.getenv("GRAPH_DB_USER_ID") + ":" 
+		/*byte[] userpass = (System.getenv("GRAPH_DB_USER_ID") + ":" 
 							+ System.getenv("GRAPH_DB_PASSWORD"))
-							.getBytes();
+							.getBytes();*/
+		byte[] userpass = (username + ":" 
+				+ password)
+				.getBytes();
 		//Encoded credentials
 		String encodedCred = Base64.encodeBase64String(userpass);
 		

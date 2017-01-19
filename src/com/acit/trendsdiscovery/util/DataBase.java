@@ -1,8 +1,9 @@
 package com.acit.trendsdiscovery.util;
 
 import java.sql.Connection;
-
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import com.ibm.db2.jcc.DB2SimpleDataSource;
@@ -120,4 +121,48 @@ public class DataBase {
    		}   		
    		return true;
    	} 
+       
+   	public static Map getGraphDBVCAP() {
+		// VCAP_SERVICES is a system environment variable
+		// Parse it to obtain the for DB2 connection info
+		HashMap<String,String> hashMap=new HashMap<String,String>();
+		String VCAP_SERVICES = System.getenv("VCAP_SERVICES");
+		System.out.println("VCAP_SERVICES");
+		if (VCAP_SERVICES != null) {
+			// parse the VCAP JSON structure
+			BasicDBObject obj = (BasicDBObject) JSON.parse(VCAP_SERVICES);
+			String thekey = null;
+			Set<String> keys = obj.keySet();
+			// Look for the VCAP key that holds the SQLDB information
+			for (String eachkey : keys) {
+				if (eachkey.toUpperCase().contains("IBM Graph")) {
+					thekey = eachkey;
+				}
+			}
+			if (thekey == null) {
+				return null;
+			}
+			BasicDBList list = (BasicDBList) obj.get(thekey);
+			obj = (BasicDBObject) list.get("0");
+			// parse all the credentials from the vcap env variable
+			obj = (BasicDBObject) obj.get("credentials");
+			String basicURL = (String) obj.get("apiURL");
+			//databaseName = (String) obj.get("apiURI");
+			//tport = obj.get("port").toString();
+			//port = Integer.parseInt(tport);
+			String username = (String) obj.get("username");
+			String graphDBPassword = (String) obj.get("password");
+			
+			System.out.println("GraphDB cred from Vcap::"+basicURL+": usrename :"+username);
+			
+			hashMap.put("GRAPH_DB_BASIC_URL", basicURL);
+			hashMap.put("GRAPH_DB_USER_ID", username);
+			hashMap.put("GRAPH_DB_PASSWORD", graphDBPassword);
+			//url = (String) obj.get("jdbcurl");
+
+		} else {
+			return null;
+		}
+		return hashMap;
+	}   
 }

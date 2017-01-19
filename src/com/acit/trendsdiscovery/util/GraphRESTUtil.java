@@ -1,5 +1,7 @@
 package com.acit.trendsdiscovery.util;
 
+import java.util.Map;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -10,6 +12,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+
+import com.accenture.acit.retail.util.DataBase;
 
 /****
  * Graph DB REST utility
@@ -40,9 +44,11 @@ public class GraphRESTUtil {
 	private void initialize()
 	{
 		client = HttpClients.createDefault();
-
-		gremlinURL = System.getenv("GRAPH_DB_GREMLIN_URL");
-		vertexURL = System.getenv("GRAPH_DB_BASIC_URL");
+		Map hashMap=DataBase.getGraphDBVCAP();		
+		//gremlinURL = System.getenv("GRAPH_DB_GREMLIN_URL");
+		//vertexURL = System.getenv("GRAPH_DB_BASIC_URL");
+		vertexURL=(String)hashMap.get("GRAPH_DB_BASIC_URL");
+		gremlinURL=vertexURL+"/gremlin";
 		//Get the current session token
 		sessionAuth = new SessionAuthenticationGraph();
 		authToken = sessionAuth.getCurrentToken();
