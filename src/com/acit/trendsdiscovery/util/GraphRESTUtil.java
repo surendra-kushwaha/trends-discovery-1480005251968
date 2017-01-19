@@ -13,8 +13,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import com.accenture.acit.retail.util.DataBase;
-
 /****
  * Graph DB REST utility
  * Execute the REST calls via POST and GET methods in this class

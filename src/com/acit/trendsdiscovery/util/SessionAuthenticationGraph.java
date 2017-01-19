@@ -1,6 +1,5 @@
 package com.acit.trendsdiscovery.util;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
@@ -10,8 +9,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.wink.json4j.JSONObject;
-
-import com.accenture.acit.retail.util.DataBase;
 
 //import com.accenture.acit.retail.trends.dao.DataSourceDAO;
 
