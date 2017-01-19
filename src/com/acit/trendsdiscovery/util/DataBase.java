@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.db2.jcc.DB2SimpleDataSource;
+import com.ibm.json.java.JSONArray;
+import com.ibm.json.java.JSONObject;
 import com.ibm.nosql.json.api.BasicDBList;
 import com.ibm.nosql.json.api.BasicDBObject;
 import com.ibm.nosql.json.util.JSON;
@@ -124,41 +126,31 @@ public class DataBase {
        
    	public static Map getGraphDBVCAP() {
 		// VCAP_SERVICES is a system environment variable
-		// Parse it to obtain the for DB2 connection info
 		HashMap<String,String> hashMap=new HashMap<String,String>();
 		String VCAP_SERVICES = System.getenv("VCAP_SERVICES");
 		System.out.println("VCAP_SERVICES");
 		if (VCAP_SERVICES != null) {
 			// parse the VCAP JSON structure
 			BasicDBObject obj = (BasicDBObject) JSON.parse(VCAP_SERVICES);
-			String thekey = null;
-			Set<String> keys = obj.keySet();
-			// Look for the VCAP key that holds the SQLDB information
-			for (String eachkey : keys) {
-				if (eachkey.toUpperCase().contains("IBM Graph")) {
-					thekey = eachkey;
+			String VCAP_SERVICES1 = System.getenv("VCAP_SERVICES");
+			JSONObject vcap=null;
+			if (VCAP_SERVICES != null) {
+				try{
+			 vcap = (JSONObject) JSONObject.parse(VCAP_SERVICES1); 
+				}catch(Exception e){
+					System.out.println(e);
 				}
 			}
-			if (thekey == null) {
-				return null;
-			}
-			BasicDBList list = (BasicDBList) obj.get(thekey);
-			obj = (BasicDBObject) list.get("0");
-			// parse all the credentials from the vcap env variable
-			obj = (BasicDBObject) obj.get("credentials");
-			String basicURL = (String) obj.get("apiURL");
-			//databaseName = (String) obj.get("apiURI");
-			//tport = obj.get("port").toString();
-			//port = Integer.parseInt(tport);
-			String username = (String) obj.get("username");
-			String graphDBPassword = (String) obj.get("password");
+			JSONArray userProvidedServices = (JSONArray) (vcap.get("IBM Graph"));
+			JSONObject credentials1 = (JSONObject) (userProvidedServices.get(0));
+			JSONObject credentials=(JSONObject)credentials1.get("credentials");
 			
-			System.out.println("GraphDB cred from Vcap::"+basicURL+": usrename :"+username);
-			
+			String graphDBPassword=credentials.get("password").toString();
+			String username=credentials.get("username").toString();
+			String basicURL=credentials.get("apiURL").toString();			
 			hashMap.put("GRAPH_DB_BASIC_URL", basicURL);
 			hashMap.put("GRAPH_DB_USER_ID", username);
 			hashMap.put("GRAPH_DB_PASSWORD", graphDBPassword);
-			//url = (String) obj.get("jdbcurl");
 
 		} else {
 			return null;
